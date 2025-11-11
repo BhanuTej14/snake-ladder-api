@@ -40,7 +40,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ API running on port ${PORT}`));
 
 // 🌐 Replace this with your actual Render API URL
-const API_URL = "https://snake-ladder-api.onrender.com";  
+const API_URL = "https://snake-ladder-api-1.onrender.com/";  
 
 // 🧾 Save player score to backend
 async function saveScore(name, moves, winner) {
