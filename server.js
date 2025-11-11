@@ -1,32 +1,17 @@
 // server.js
-import express from "express";
-import cors from "cors";
+const API_URL = "https://snake-ladder-api.onrender.com";
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+async function saveScore(name, moves, winner) {
+  await fetch(`${API_URL}/api/score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, moves, winner })
+  });
+}
 
-let leaderboard = [];
+async function loadLeaderboard() {
+  const res = await fetch(`${API_URL}/api/leaderboard`);
+  const data = await res.json();
+  console.table(data);
+}
 
-// Save score
-app.post("/api/score", (req, res) => {
-  const { name, moves, winner } = req.body;
-  if (!name || !moves || typeof winner === "undefined") {
-    return res.status(400).json({ message: "Invalid data" });
-  }
-  const playerData = { name, moves, winner, date: new Date() };
-  leaderboard.push(playerData);
-  leaderboard = leaderboard.slice(-10);
-  res.json({ message: "Score saved", data: playerData });
-});
-
-// Get leaderboard
-app.get("/api/leaderboard", (req, res) => {
-  res.json(leaderboard.sort((a, b) => a.moves - b.moves));
-});
-
-// Root
-app.get("/", (req, res) => res.send("🐍 Snake & Ladder API running"));
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ API on port ${PORT}`));
